@@ -82,7 +82,7 @@ def device_inquiry_with_with_rssi(sock):
     bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
     sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
 
-    duration = 30
+    duration = 4
     max_responses = 255
     cmd_pkt = struct.pack("BBBBB", 0x33, 0x8b, 0x9e, duration, max_responses)
     bluez.hci_send_cmd(sock, bluez.OGF_LINK_CTL, bluez.OCF_INQUIRY, cmd_pkt)
@@ -102,8 +102,6 @@ def device_inquiry_with_with_rssi(sock):
                         bluetooth.get_byte(pkt[1+13*nrsp+i]))
                 results.append( ( addr, rssi ) )
                 print("[%s] RSSI: [%d]" % (addr, rssi))
-        elif event == bluez.EVT_INQUIRY_COMPLETE:
-            done = True
         elif event == bluez.EVT_CMD_STATUS:
             status, ncmd, opcode = struct.unpack("BBH", pkt[3:7])
             if status != 0:
