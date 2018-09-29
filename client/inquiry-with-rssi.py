@@ -103,6 +103,7 @@ def device_inquiry_with_with_rssi(sock):
                             bluetooth.get_byte(pkt[1+13*nrsp+i]))
                     results.append( ( addr, rssi ) )
                     print("[%s] RSSI: [%d]" % (addr, rssi))
+                    print(nsrp)
             elif event == bluez.EVT_INQUIRY_COMPLETE:
                 done = True
             elif event == bluez.EVT_CMD_STATUS:
@@ -113,7 +114,6 @@ def device_inquiry_with_with_rssi(sock):
                     done = True
             elif event == bluez.EVT_INQUIRY_RESULT:
                 pkt = pkt[3:]
-                print(pkt)
                 nrsp = bluetooth.get_byte(pkt[0])
                 for i in range(nrsp):
                     addr = bluez.ba2str( pkt[1+6*i:1+6*i+6] )
