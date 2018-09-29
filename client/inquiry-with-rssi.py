@@ -102,8 +102,8 @@ def device_inquiry_with_with_rssi(sock):
                     rssi = bluetooth.byte_to_signed_int(
                             bluetooth.get_byte(pkt[1+13*nrsp+i]))
                     results.append( ( addr, rssi ) )
-                    print("[%s] RSSI: [%d]" % (addr, rssi))
-                    print(nrsp)
+                    if "98:00" in str(addr[0]) or "30:6A" in str(addr[0]):
+                        print("[%s] RSSI: [%d]" % (addr, rssi))
             elif event == bluez.EVT_INQUIRY_COMPLETE:
                 done = True
             elif event == bluez.EVT_CMD_STATUS:
