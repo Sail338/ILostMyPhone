@@ -9,7 +9,8 @@ import bluetooth
 
 def printpacket(pkt):
     for c in pkt:
-        sys.stdout.write("%02x " % struct.unpack("B",c)[0])
+        #sys.stdout.write("%02x " % struct.unpack("B",c)[0])
+        print()
     print() 
 
 
@@ -71,7 +72,7 @@ def write_inquiry_mode(sock, mode):
 
 def device_inquiry_with_with_rssi(sock):
     # save current filter
-    old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 200)
+    old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 
     # perform a device inquiry on bluetooth device #0
     # The inquiry should last 8 * 1.28 = 10.24 seconds
@@ -85,39 +86,42 @@ def device_inquiry_with_with_rssi(sock):
     duration = 4
     max_responses = 255
     cmd_pkt = struct.pack("BBBBB", 0x33, 0x8b, 0x9e, duration, max_responses)
-    bluez.hci_send_cmd(sock, bluez.OGF_LINK_CTL, bluez.OCF_INQUIRY, cmd_pkt)
+    while True:
+        bluez.hci_send_cmd(sock, bluez.OGF_LINK_CTL, bluez.OCF_INQUIRY, cmd_pkt)
+        results = []
 
-    results = []
-
-    done = False
-    while not done:
-        pkt = sock.recv(255)
-        ptype, event, plen = struct.unpack("BBB", pkt[:3])
-        if event == bluez.EVT_INQUIRY_RESULT_WITH_RSSI:
-            pkt = pkt[3:]
-            nrsp = bluetooth.get_byte(pkt[0])
-            for i in range(nrsp):
-                addr = bluez.ba2str( pkt[1+6*i:1+6*i+6] )
-                rssi = bluetooth.byte_to_signed_int(
-                        bluetooth.get_byte(pkt[1+13*nrsp+i]))
-                results.append( ( addr, rssi ) )
-                print("[%s] RSSI: [%d]" % (addr, rssi))
-        elif event == bluez.EVT_CMD_STATUS:
-            status, ncmd, opcode = struct.unpack("BBH", pkt[3:7])
-            if status != 0:
-                print("uh oh...")
-                printpacket(pkt[3:7])
+        done = False
+        while not done:
+            pkt = sock.recv(255)
+            ptype, event, plen = struct.unpack("BBB", pkt[:3])
+            if event == bluez.EVT_INQUIRY_RESULT_WITH_RSSI:
+                pkt = pkt[3:]
+                nrsp = bluetooth.get_byte(pkt[0])
+                for i in range(nrsp):
+                    addr = bluez.ba2str( pkt[1+6*i:1+6*i+6] )
+                    rssi = bluetooth.byte_to_signed_int(
+                            bluetooth.get_byte(pkt[1+13*nrsp+i]))
+                    results.append( ( addr, rssi ) )
+                    if "98:00" in str(addr) or "30:6A" in str(addr):
+                        print("[%s] RSSI: [%d]" % (addr, rssi))
+            elif event == bluez.EVT_INQUIRY_COMPLETE:
                 done = True
-        elif event == bluez.EVT_INQUIRY_RESULT:
-            pkt = pkt[3:]
-            nrsp = bluetooth.get_byte(pkt[0])
-            for i in range(nrsp):
-                addr = bluez.ba2str( pkt[1+6*i:1+6*i+6] )
-                results.append( ( addr, -1 ) )
-                print("[%s] (no RRSI)" % addr)
-        else:
-            print("unrecognized packet type 0x%02x" % ptype)
-        print("event ", event)
+            elif event == bluez.EVT_CMD_STATUS:
+                status, ncmd, opcode = struct.unpack("BBH", pkt[3:7])
+                if status != 0:
+                    print("uh oh...")
+                    printpacket(pkt[3:7])
+                    done = True
+            elif event == bluez.EVT_INQUIRY_RESULT:
+                pkt = pkt[3:]
+                nrsp = bluetooth.get_byte(pkt[0])
+                for i in range(nrsp):
+                    addr = bluez.ba2str( pkt[1+6*i:1+6*i+6] )
+                    results.append( ( addr, -1 ) )
+                    print("[%s] (no RRSI)" % addr)
+            else:
+                print("unrecognized packet type 0x%02x" % ptype)
+            print("event ", event)
 
 
     # restore old filter
