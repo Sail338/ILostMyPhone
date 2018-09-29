@@ -71,7 +71,7 @@ def write_inquiry_mode(sock, mode):
 
 def device_inquiry_with_with_rssi(sock):
     # save current filter
-    old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
+    old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 200)
 
     # perform a device inquiry on bluetooth device #0
     # The inquiry should last 8 * 1.28 = 10.24 seconds
@@ -82,7 +82,7 @@ def device_inquiry_with_with_rssi(sock):
     bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
     sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
 
-    duration = 4
+    duration = 30
     max_responses = 255
     cmd_pkt = struct.pack("BBBBB", 0x33, 0x8b, 0x9e, duration, max_responses)
     bluez.hci_send_cmd(sock, bluez.OGF_LINK_CTL, bluez.OCF_INQUIRY, cmd_pkt)
