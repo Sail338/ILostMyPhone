@@ -87,11 +87,12 @@ def device_inquiry_with_with_rssi(sock):
     max_responses = 255
     cmd_pkt = struct.pack("BBBBB", 0x33, 0x8b, 0x9e, duration, max_responses)
 
-    bluez.hci_send_cmd(sock, bluez.OGF_LINK_CTL, bluez.OCF_INQUIRY, cmd_pkt)
     results = []
 
     done = False
     while not done:
+        bluez.hci_send_cmd(sock, bluez.OGF_LINK_CTL, bluez.OCF_INQUIRY, cmd_pkt)
+        time.sleep(1)
         pkt = sock.recv(255)
         ptype, event, plen = struct.unpack("BBB", pkt[:3])
         if event == bluez.EVT_INQUIRY_RESULT_WITH_RSSI:
