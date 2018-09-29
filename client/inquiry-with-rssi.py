@@ -10,6 +10,7 @@ import bluetooth
 def printpacket(pkt):
     for c in pkt:
         #sys.stdout.write("%02x " % struct.unpack("B",c)[0])
+        print()
     print() 
 
 
