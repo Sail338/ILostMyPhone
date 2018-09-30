@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+         <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row" style="margin: 2em;">
+                <h1>
+                    Spatially locate device in array!
+                </h1>
+            </div>
+            <div class="row" style="margin: 2em;">
+                <div class="col-md-8">
+                    <canvas id="canv" style="width: 100%; height: 100%; background-color: #e9ebee;"></canvas>
+                </div>
+                <div class="col-md-4">
+                    <div class="container">
+                        <div class="row">
+                            Coordinates: 
+                        </div>
+                        <div class="row">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#GIFModal">Change Image!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div style="margin-left: auto; margin-right: auto; margin-top: 2em; width:640px; height: 480px; background-color:blue;"></div> -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="GIFModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Select your GIF</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <nav class="navbar navbar-light bg-light">
+                            <form class="form-inline">
+                                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                            </form>
+                        </nav>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-6"></div>
+                                <div class="col-md-6"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script>
+            var canvas = document.getElementById( "canv" );
+            var ctx = canvas.getContext("2d");
+
+            var x = 0.5;
+            var y = 0.5;
+            var source = null;
+            var image = document.createElement('img');
+            image.src = source;
+
+            function drawStuff(x, y, image){
+                if(image){
+                    ctx.drawImage(image, x*480, y*480);
+                }
+                else{
+                    ctx.beginPath();
+                    ctx.fillStyle = "#cc0033";
+                    ctx.arc(x*300, y*150, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.closePath();
+                    ctx.beginPath();
+                    ctx.arc(x*300, y*150, 15, 0, Math.PI *2);
+                    ctx.stroke();
+                    ctx.closePath()
+                }
+            }
+
+            var Http = new XMLHttpRequest();
+            url = "http://ec2-35-153-99-16.compute-1.amazonaws.com:5000/send_queue";
+            Http.open("GET", url);
+            Http.send();
+            Http.onreadystatechange=(e)=>{
+                if(this.readyState==4 && this.status==200){
+                    console.log(Http.responseText)
+                }
+            }
+
+            drawStuff(x,y);
+        </script>
+    </body>
+</html>
