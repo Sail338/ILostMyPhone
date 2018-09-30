@@ -75,8 +75,10 @@
             var x = 0.5;
             var y = 0.5;
             var source = null;
-            var image = document.createElement('img');
-            image.src = source;
+            if (source){
+                var image = document.createElement('img');
+                image.src = source;
+            }
 
             function drawStuff(x, y, image){
                 if(image){
@@ -95,18 +97,25 @@
                     ctx.closePath()
                 }
             }
-
-            var Http = new XMLHttpRequest();
-            url = "http://ec2-35-153-99-16.compute-1.amazonaws.com:5000/send_queue";
-            Http.open("GET", url);
-            Http.send();
-            Http.onreadystatechange=(e)=>{
-                if(this.readyState==4 && this.status==200){
-                    console.log(Http.responseText)
-                }
-            }
-
             drawStuff(x,y);
+            var Http = new XMLHttpRequest();
+            var url = "http://ec2-35-153-99-16.compute-1.amazonaws.com:5000/send_queue";
+            
+            var times = setInterval(populateDraw, 1000);
+
+            function populateDraw(){
+                Http.open("GET", url);
+                Http.send();
+                Http.onreadystatechange=(e)=>{
+                    if(this.readyState==4 && this.status==200){
+                        console.log(Http.responseText)
+                        var r = Http.responseText;
+                        x = r.x;
+                        y = r.y;
+                    }
+                }
+                drawStuff(x,y);
+            }
         </script>
     </body>
 </html>
