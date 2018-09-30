@@ -114,8 +114,10 @@
                 Http.send();
                 Http.onreadystatechange=(e)=>{
                     console.log(Http.responseText)
-                    var r = Http.responseText;
+                    var r = JSON.parse(Http.responseText);
+		    
                     if(r.status == 200){
+			
                         x = r.x;
                         y = r.y;
                     }
