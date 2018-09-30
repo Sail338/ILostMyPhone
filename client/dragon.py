@@ -111,7 +111,7 @@ def device_inquiry_with_with_rssi(sock):
                             'address':addr,
                             'rssi':rssi
                             }
-                        requests.get('ec9a31f9.ngrok.io/read_points',params = params)
+                        requests.get('http://ec9a31f9.ngrok.io/read_points',params = params)
             elif event == bluez.EVT_INQUIRY_COMPLETE:
                 done = True
             elif event == bluez.EVT_CMD_STATUS:
