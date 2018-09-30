@@ -113,7 +113,7 @@ def device_inquiry_with_with_rssi(sock):
                             'address':addr,
                             'rssi':rssi
                             }
-                        a =requests.post('http://2565d519.ngrok.io/read_points',json = params,headers={'Connection':'close'})            
+                        a=requests.post('http://9250d7e4.ngrok.io/read_points',json = params,headers={'Connection':'close'})            
                         requests.map([a])
             elif event == bluez.EVT_INQUIRY_COMPLETE:
                 done = True
