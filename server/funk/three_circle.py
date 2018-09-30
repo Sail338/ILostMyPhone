@@ -10,4 +10,5 @@ def three_circle_intersection(x0, y0, r0, x1, y1, r1, x2, y2, r2):
     return (x,y)
 
 def get_user_location_by_response(rssia, rssib, rssic):
-    return three_circle_intersection(0, 0, abs(rssia), 1, 0, abs(rssib), 0, 1, abs(rssic))
+
+    return three_circle_intersection(0, 0, abs(rssia)/90, 1, 0, abs(rssib)/90, 0, 1, abs(rssic)/90)

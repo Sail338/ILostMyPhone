@@ -1,4 +1,5 @@
 from flask import Flask,request
+from funk import three_circle
 
 app = Flask(__name__)
 
