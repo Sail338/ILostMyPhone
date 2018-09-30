@@ -1,15 +1,12 @@
-from flask import Flask,request
 from funk import three_circle
-
 from sanic import Sanic
 from sanic.response import json
 app = Sanic()
 address_map = dict()
 @app.route('/read_points', methods = ['POST'])
-def test(request):
-#    print(request.body.address)    
-    print(request.json)
-    json_ = request.json
+async def test(request):
+    json_ = request.json    
+    #print(request)
     if json_['address'] not in address_map:
         print("not there")
         address_map[json_['address']] = dict()
@@ -24,11 +21,11 @@ def test(request):
              print(a)
              tuple_map = {}
              address_map[json_['address']] = {}
-    return json({'hello': 'world'})
+    return json({"hello": "world"})
 
 
 
 
 
 if __name__ == '__main__':
-        app.run(port=5000)
+        app.run(port=5000,debug= True)
