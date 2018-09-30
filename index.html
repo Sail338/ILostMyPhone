@@ -22,7 +22,7 @@
                 <div class="col-md-4">
                     <div class="container">
                         <div class="row">
-                            Coordinates: 
+                            Coordinates: (x: <b id="xcoord"></b>, y: <b id="ycoord"></b>)
                         </div>
                         <div class="row">
                             <button onclick="getGif()" type="button" class="btn btn-primary">Change Image!</button>
@@ -81,14 +81,14 @@
             }
 
             function drawStuff(x, y, image){
-		$myCanv.clearCanvas();
+                $myCanv.clearCanvas();
+                $( "#xcoord" ).text(x);
+                $( "#ycoord" ).text(y);
 
                 if(image){
                     ctx.drawImage(image, x*480, y*480);
                 }
                 else{
-
-
                     $myCanv.drawArc({
                         fillStyle: "#cc0033",
                         radius: 2,
@@ -113,17 +113,15 @@
                 Http.open("GET", url);
                 Http.send();
                 Http.onreadystatechange=(e)=>{
-                        console.log(Http.responseText)
-                        var r = Http.responseText;
-			if(r.status == 200){
+                    console.log(Http.responseText)
+                    var r = Http.responseText;
+                    if(r.status == 200){
                         x = r.x;
                         y = r.y;
-			}
-			else{
-				x += 0.1
-			}
-                    
-
+                    }
+                    else{
+                        // x += 0.1
+                    }
                 }
                 drawStuff(x,y);
             }
