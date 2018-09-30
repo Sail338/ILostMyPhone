@@ -6,7 +6,7 @@ import sys
 import struct
 import bluetooth._bluetooth as bluez
 import bluetooth
-import requests
+import grequests as requests
 id = 'a'
 
 def printpacket(pkt):
@@ -113,8 +113,8 @@ def device_inquiry_with_with_rssi(sock):
                             'address':addr,
                             'rssi':rssi
                             }
-                        
-                        requests.post('http://bbc7dbe2.ngrok.io/read_points',json = params,headers ={'Connection':'close'})
+                        a =requests.post('http://2565d519.ngrok.io/read_points',json = params,headers={'Connection':'close'})            
+                        requests.map([a])
             elif event == bluez.EVT_INQUIRY_COMPLETE:
                 done = True
             elif event == bluez.EVT_CMD_STATUS:
