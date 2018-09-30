@@ -6,6 +6,7 @@ import sys
 import struct
 import bluetooth._bluetooth as bluez
 import bluetooth
+import requests
 
 def printpacket(pkt):
     for c in pkt:
@@ -98,13 +99,19 @@ def device_inquiry_with_with_rssi(sock):
                 pkt = pkt[3:]
                 nrsp = bluetooth.get_byte(pkt[0])
                 for i in range(nrsp):
-                    print(pkt)
                     addr = bluez.ba2str( pkt[1+6*i:1+6*i+6] )
                     rssi = bluetooth.byte_to_signed_int(
                             bluetooth.get_byte(pkt[1+13*nrsp+i]))
                     results.append( ( addr, rssi ) )
-                    if "98:00" in str(addr) or "30:6A" in str(addr):
+                    if "98:00" in str(addr) or "30:6A" in str(addr) or 'D4' in str(addr):
                         print("[%s] RSSI: [%d]" % (addr, rssi))
+                        #send request to server
+                        #serialize json
+                        params = {
+                            'address':addr,
+                            'rssi':rssi
+                            }
+                        requests.get('ec9a31f9.ngrok.io/read_points',params = params)
             elif event == bluez.EVT_INQUIRY_COMPLETE:
                 done = True
             elif event == bluez.EVT_CMD_STATUS:
