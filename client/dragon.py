@@ -113,8 +113,8 @@ def device_inquiry_with_with_rssi(sock):
                             'address':addr,
                             'rssi':rssi
                             }
-                        print(params)
-                        requests.post('http://bbc7dbe2.ngrok.io/read_points',json = params)
+                        
+                        requests.post('http://bbc7dbe2.ngrok.io/read_points',json = params,headers ={'Connection':'close'})
             elif event == bluez.EVT_INQUIRY_COMPLETE:
                 done = True
             elif event == bluez.EVT_CMD_STATUS:
@@ -132,7 +132,6 @@ def device_inquiry_with_with_rssi(sock):
                     print("[%s] (no RRSI)" % addr)
             else:
                 print("unrecognized packet type 0x%02x" % ptype)
-            print("event ", event)
 
 
     # restore old filter
