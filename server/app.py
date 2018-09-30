@@ -1,8 +1,12 @@
-from flask import Flask,request
+from sanic import Sanic
+from sanic.response import json
+app = Sanic()
 
-app = Flask(__name__)
+@app.route('/read_points', methods = ['POST'])
+async def test(request):
+#    print(request.body.address)    
+    print(request.json)
+    return json({'hello': 'world'})
 
-@app.route('/read_points')
-def read_points():
-    print(request)
-    return "done"
+if __name__ == '__main__':
+        app.run(port=5000)
