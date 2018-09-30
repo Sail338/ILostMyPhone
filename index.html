@@ -85,6 +85,7 @@
                     $myCanv.drawImage({
                         source: imgsource,
                         fromCenter: true,
+                        scale: 0.3,
                         x: x*300,
                         y: y*150
                     });
@@ -127,7 +128,7 @@
                 drawStuff(x,y, imgsource);
             }
             function getGif(){
-                giphyURL="https://api.giphy.com/v1/gifs/random?api_key=OIYkgIeh9PrziH3xaXb7Crxg32kbdyI8&tag=harry%20potter&rating=G"
+                giphyURL="https://api.giphy.com/v1/gifs/random?api_key=FhyEnoNtQVEceELiVSPcZpghov1xff2y&tag=harry%20potter&rating=G"
                 $.ajax({url: giphyURL, success: function(result){
                     imgsource = result.data.fixed_height_small_url;
                     console.log(imgsource);
