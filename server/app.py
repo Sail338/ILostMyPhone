@@ -1,9 +1,14 @@
 from funk import three_circle
 from sanic import Sanic
 from sanic.response import json
+from sanic import response
 app = Sanic()
 address_map = dict()
 q = []
+@app.route('/')
+async def render_main(request):
+     return await response.file('../index.html') 
+
 @app.route('/read_points', methods = ['POST'])
 async def test(request):
     json_ = request.json    
@@ -26,12 +31,12 @@ async def test(request):
              address_map[json_['address']] = {}
     return json({"hello": "world"})
 
-@app.route('/send_queue'):
-    def popFromQ(request):
-        if len(q) > 0:
-            return json(q.pop())
-        else:
-            return json({'status':400})
+@app.route('/send_queue')
+def popFromQ(request):
+    if len(q) > 0:
+        return json(q.pop())
+    else:
+         return json({'status':400})
         
 
 
